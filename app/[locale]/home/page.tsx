@@ -62,7 +62,13 @@ export default function Home() {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const { toast } = useToast()
 
-  const maxWorkers = navigator.hardwareConcurrency || 4
+  const [maxWorkers, setMaxWorkers] = useState(4)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setMaxWorkers(window.navigator?.hardwareConcurrency || 4)
+    }
+  }, [])
 
   const incrementCPU = () => {
     if (cpuUsage < 100) {
@@ -78,19 +84,21 @@ export default function Home() {
 
   // 获取CPU核心数
   const getCPUCount = async () => {
-    if (navigator.hardwareConcurrency) {
-      return navigator.hardwareConcurrency
+    if (typeof window !== 'undefined' && window.navigator.hardwareConcurrency) {
+      return window.navigator.hardwareConcurrency
     }
     return 4 // 默认值
   }
 
   const copyToClipboard = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text)
-      toast({
-        title: t('toast.copied'),
-        duration: 2000,
-      })
+      if (typeof window !== 'undefined') {
+        await window.navigator.clipboard.writeText(text)
+        toast({
+          title: t('toast.copied'),
+          duration: 2000,
+        })
+      }
     } catch {
       toast({
         title: t('toast.error'),
