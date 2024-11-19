@@ -1,18 +1,22 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: './worker-bundle.js',
   output: {
     filename: 'worker.js',
     path: path.resolve(__dirname, 'public'),
   },
   resolve: {
+    extensions: ['.ts', '.js'],
     fallback: {
       crypto: false,
       buffer: require.resolve('buffer/'),
       stream: false
     }
+  },
+  optimization: {
+    minimize: false
   },
   module: {
     rules: [
