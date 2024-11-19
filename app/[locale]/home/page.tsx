@@ -70,12 +70,29 @@ export default function Home() {
       
       // 注册 Service Worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/worker.js', {
-          scope: '/'
-        }).then(registration => {
-          console.log('Service Worker registered:', registration);
-        }).catch(error => {
-          console.error('Service Worker registration failed:', error);
+        // 检查是否已经注册
+        navigator.serviceWorker.getRegistration().then(registration => {
+          if (!registration) {
+            // 如果没有注册，则注册新的 Service Worker
+            navigator.serviceWorker.register('/worker.js')
+              .then(registration => {
+                console.log('Service Worker registered successfully:', registration);
+                
+                registration.addEventListener('statechange', () => {
+                  console.log('Service Worker state changed:', registration.active?.state);
+                });
+              })
+              .catch(error => {
+                console.error('Service Worker registration failed:', error);
+              });
+          } else {
+            console.log('Service Worker already registered');
+          }
+        });
+
+        // 监听 Service Worker 消息
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          console.log('Received message from Service Worker:', event.data);
         });
       }
 
@@ -385,13 +402,14 @@ export default function Home() {
                 <div className="space-y-2">
                   <Label>{t('inputLabel')}</Label>
                   <Input 
-                    type="text" 
+                    type="text"
                     value={pattern} 
                     onChange={(e) => {
                       const value = e.target.value.toUpperCase()
                       setPattern(value)
-                    }} 
+                    }}
                     placeholder={t('inputPlaceholder')} 
+                    variant="monospace"
                   />
                   <div className="text-sm text-muted-foreground">
                     <span className="text-xs">{t('sampleAddress')}</span>
@@ -588,7 +606,8 @@ export default function Home() {
                             type="text"
                             value={result.publicId || ''}
                             readOnly
-                            className="font-mono pr-10"
+                            variant="monospace"
+                            padding="right"
                           />
                           <Button
                             variant="ghost"
@@ -621,9 +640,9 @@ export default function Home() {
                             type={showPrivateKey ? "text" : "password"}
                             value={result.privateKey || ''}
                             readOnly
-                            className="font-mono pr-20"
+                            variant="monospace"
+                            padding="right"
                             autoComplete="new-password"
-                            aria-label="Private key"
                           />
                           <div className="absolute right-0 top-0 h-full flex">
                             <Button

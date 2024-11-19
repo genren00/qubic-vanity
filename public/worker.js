@@ -133,7 +133,6 @@ self.onmessage = async (e) => {
 // Service Worker 部分
 const CACHE_NAME = 'qubic-vanity-cache-v1';
 const ASSETS_TO_CACHE = [
-  '/',
   '/lib/qubic.bundle.js',
   '/worker.js'
 ];
@@ -142,23 +141,90 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(ASSETS_TO_CACHE);
+      .then(async (cache) => {
+        console.log('Opening cache');
+        try {
+          await cache.addAll(ASSETS_TO_CACHE);
+          console.log('Basic assets cached successfully');
+        } catch (error) {
+          console.error('Error caching basic assets:', error);
+        }
       })
+  );
+  self.skipWaiting();
+});
+
+// Service Worker 激活事件
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => {
+      return self.clients.claim();
+    })
   );
 });
 
 // Service Worker 获取事件
 self.addEventListener('fetch', (event) => {
+  // 只处理 GET 请求
+  if (event.request.method !== 'GET') return;
+
+  // 创建一个新的 Request，设置 redirect: 'follow'
+  const modifiedRequest = new Request(event.request.url, {
+    method: event.request.method,
+    headers: event.request.headers,
+    mode: event.request.mode,
+    credentials: event.request.credentials,
+    redirect: 'follow' // 允许重定向
+  });
+
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // 如果在缓存中找到响应，则返回缓存的版本
-        if (response) {
-          return response;
+      .then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
-        return fetch(event.request);
+
+        return fetch(modifiedRequest)
+          .then(response => {
+            // 不缓存非 200 响应和非基本响应
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // 克隆响应用于缓存
+            const responseToCache = response.clone();
+
+            // 异步缓存响应
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                // 只缓存静态资源
+                if (event.request.url.includes('/lib/') || 
+                    event.request.url.includes('/worker.js')) {
+                  cache.put(event.request, responseToCache);
+                }
+              });
+
+            return response;
+          })
+          .catch(error => {
+            console.error('Fetch failed:', error);
+            // 如果是静态资源请求，返回离线响应
+            if (event.request.url.includes('/lib/') || 
+                event.request.url.includes('/worker.js')) {
+              return new Response('Offline content', {
+                headers: { 'Content-Type': 'text/plain' }
+              });
+            }
+            throw error;
+          });
       })
   );
 });
