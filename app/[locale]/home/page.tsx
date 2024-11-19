@@ -146,11 +146,8 @@ export default function Home() {
       const targetWorkers = Math.max(1, Math.floor((maxWorkers * cpuUsage) / 100))
       const countPerWorker = Math.floor(startCount / targetWorkers)
       
-      // 获取 basePath
-      const basePath = window.location.pathname.startsWith('/qubic-vanity') ? '/qubic-vanity' : ''
-      
       for (let i = 0; i < targetWorkers; i++) {
-        const worker = new Worker(basePath + '/worker.js')
+        const worker = new Worker('/worker.js')
         worker.onmessage = (e) => {
           const { type, privateKey, publicId, error, count, speed, workerId } = e.data
           console.log('Worker message:', { type, count, speed, workerId })

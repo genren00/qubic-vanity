@@ -1,6 +1,5 @@
 // 导入打包后的 Qubic 库
-const basePath = self.location.pathname.startsWith('/qubic-vanity') ? '/qubic-vanity' : ''
-importScripts(basePath + '/lib/qubic.bundle.js')
+importScripts('/lib/qubic.bundle.js')
 
 console.log('Qubic library:', self.qubic)
 console.log('QubicHelper:', self.QubicHelper)
