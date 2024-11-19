@@ -1,0 +1,90 @@
+{
+  "Index": {
+    "title": "Qubic Apps - XARKUR",
+    "description": "The wallet generation process is completed locally. No information can be accessed, and it is recommended to operate offline."
+  },
+  "Home": {
+    "building": "Qubic Apps",
+    "dataFetching": "Qubic Address Generator",
+    "title": "Qubic Address Generator",
+    "description": "Wallet generation process is completed locally, no need to worry about information leakage.",
+    "inputLabel": "Enter custom uppercase letters (e.g., QUBIC)",
+    "inputPlaceholder": "QUBIC",
+    "sampleAddress": "Sample Address:",
+    "prefixSuffix": {
+      "label": "Prefix or Suffix",
+      "prefix": "Prefix",
+      "suffix": "Suffix"
+    },
+    "performance": "Performance",
+    "buttons": {
+      "generating": "Generating...",
+      "generate": "Generate",
+      "continue": "Continue",
+      "pause": "Pause"
+    },
+    "generationInfo": {
+      "title": "Generation Info",
+      "difficulty": {
+        "label": "Difficulty",
+        "estimate": "Estimated generation difficulty:",
+        "times": "times",
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard",
+        "extreme": "Extreme"
+      },
+      "generated": "Generated",
+      "probability": "50% Probability",
+      "speed": "Speed",
+      "status": {
+        "label": "Status",
+        "waiting": "Waiting",
+        "generating": "Generating",
+        "paused": "Paused",
+        "success": "Success"
+      },
+      "warning": "It is recommended not to exceed 5 letters, otherwise the address generation time will be longer"
+    },
+    "result": {
+      "title": "Generation Result",
+      "description": "Please keep your private key safe and do not share it with others",
+      "scanQR": "Scan QR for Private Key",
+      "address": "Address",
+      "privateKey": "Private Key",
+      "copied": "Address copied to clipboard"
+    },
+    "successDialog": {
+      "title": "🎉 Congratulations! Generation Successful! 🎉",
+      "message": "Great! We have successfully generated your desired vanity address!",
+      "copyAddress": "Copy Address",
+      "description": "Your vanity address has been generated successfully.",
+      "sponsor": "If this tool has been helpful, consider sponsoring some QUBIC to support me:",
+      "sponsorDescription": "Your sponsorship will help me continue improving this tool and give me the opportunity to develop more features!",
+      "cancel": "Maybe Next Time",
+      "sponsorAddress": "XARKUROFQOTNDDSGVGUZSWDEEYMBSXOEAAYGJMUTFDWDMASHMFQPKYIHTPHA"
+    },
+    "toast": {
+      "copied": "Copied to clipboard",
+      "error": "Error",
+      "errorGenerating": "Error generating address: {error}",
+      "errorStarting": "Error starting address generation"
+    }
+  },
+  "Navigation": {
+    "appTitle": "XARKUR",
+    "appSubtitle": "Projects",
+    "mainGroup": "Qubic Apps",
+    "projectsGroup": "Qubic Official Links",
+    "projects": {
+      "website": "Qubic Website",
+      "docs": "Qubic Documentation",
+      "wallet": "Qubic Wallet",
+      "explorer": "Qubic Explorer"
+    },
+    "navMain": {
+      "addressGenerator": "Qubic Address Generator",
+      "more": "More..."
+    }
+  }
+}

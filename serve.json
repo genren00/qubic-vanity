@@ -1,0 +1,10 @@
+{
+  "public": "out",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/qubic-vanity/**"
+    }
+  ],
+  "trailingSlash": false
+}

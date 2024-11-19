@@ -1,0 +1,90 @@
+{
+  "Index": {
+    "title": "Qubic 应用 - XARKUR",
+    "description": "钱包生成过程均在本地完成，无法获取到任何信息，建议断开网络进行操作"
+  },
+  "Home": {
+    "building": "Qubic 应用",
+    "dataFetching": "Qubic 地址生成器",
+    "title": "Qubic 地址生成器",
+    "description": "钱包生成过程均在本地完成，无需担心信息泄漏",
+    "inputLabel": "输入你要生成的自定义大写字母 比如: QUBIC",
+    "inputPlaceholder": "QUBIC",
+    "sampleAddress": "示例地址:",
+    "prefixSuffix": {
+      "label": "前缀或后缀",
+      "prefix": "前缀",
+      "suffix": "后缀"
+    },
+    "performance": "性能",
+    "buttons": {
+      "generating": "生成中...",
+      "generate": "生成",
+      "continue": "继续",
+      "pause": "暂停"
+    },
+    "generationInfo": {
+      "title": "生成信息",
+      "difficulty": {
+        "label": "难度",
+        "estimate": "预计生成难度:",
+        "times": "次",
+        "easy": "容易",
+        "medium": "中等",
+        "hard": "困难",
+        "extreme": "极难"
+      },
+      "generated": "生成",
+      "probability": "50% 可能性",
+      "speed": "速度",
+      "status": {
+        "label": "状态",
+        "waiting": "等待中",
+        "generating": "生成中",
+        "paused": "已暂停",
+        "success": "成功"
+      },
+      "warning": "建议填写的字母不超过 5 个字母，否则生成地址的时间会比较长"
+    },
+    "result": {
+      "title": "生成结果",
+      "description": "请妥善保管私钥，不要泄露给他人",
+      "scanQR": "扫描获取私钥",
+      "address": "地址",
+      "privateKey": "私钥",
+      "copied": "地址已复制到剪贴板"
+    },
+    "successDialog": {
+      "title": " 🎉 恭喜！生成成功！ 🎉",
+      "message": "太棒了！我们已经成功生成了你想要的靓号地址！",
+      "copyAddress": "复制地址",
+      "description": "你的靓号地址已经成功生成。",
+      "sponsor": "如果这个工具对你有帮助，你可以考虑赞助一些 QUBIC 来支持我：",
+      "sponsorDescription": "你的赞助将帮助我继续改进这个工具，让我有机会尝试开发更多的功能！",
+      "cancel": "下次一定",
+      "sponsorAddress": "XARKUROFQOTNDDSGVGUZSWDEEYMBSXOEAAYGJMUTFDWDMASHMFQPKYIHTPHA"
+    },
+    "toast": {
+      "copied": "已复制到剪贴板",
+      "error": "错误",
+      "errorGenerating": "生成地址时出错：{error}",
+      "errorStarting": "启动地址生成时出错"
+    }
+  },
+  "Navigation": {
+    "appTitle": "XARKUR",
+    "appSubtitle": "Projects",
+    "mainGroup": "Qubic 应用",
+    "projectsGroup": "Qubic 官方链接",
+    "projects": {
+      "website": "Qubic 官网",
+      "docs": "Qubic 文档",
+      "wallet": "Qubic 钱包",
+      "explorer": "Qubic 浏览器"
+    },
+    "navMain": {
+      "addressGenerator": "Qubic 地址生成器",
+      "more": "更多..."
+    }
+  }
+}
