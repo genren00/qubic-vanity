@@ -1,22 +1,20 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
-  entry: './worker-bundle.js',
+  mode: 'production', // 改为生产模式
+  entry: {
+    qubic: './worker-bundle.js'
+  },
   output: {
-    filename: 'worker.js',
-    path: path.resolve(__dirname, 'public'),
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'public/lib'),
   },
   resolve: {
-    extensions: ['.ts', '.js'],
     fallback: {
       crypto: false,
       buffer: require.resolve('buffer/'),
       stream: false
     }
-  },
-  optimization: {
-    minimize: false
   },
   module: {
     rules: [
