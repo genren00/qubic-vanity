@@ -116,6 +116,16 @@ export default function Home() {
     }
   }, [result]);
 
+  // 在组件卸载时清理本地存储和workers
+  useEffect(() => {
+    return () => {
+      // 清理本地存储
+      localStorage.removeItem('generatedAddresses')
+      // 终止所有workers
+      workers.forEach(worker => worker.terminate())
+    }
+  }, [workers])
+
   const incrementCPU = () => {
     if (cpuUsage < 100) {
       setCpuUsage(prev => Math.min(prev + 10, 100))
@@ -215,19 +225,7 @@ export default function Home() {
               [workerId]: count
             }))
           } else if (type === 'success') {
-            setResult({
-              privateKey,
-              publicId,
-            })
-            setProgress(100)
-            setIsGenerating(false)
-            setIsPaused(false)
-            setGenerationSpeed(0)
-            setShowSuccessDialog(true)  // 显示成功对话框
-            
-            // 终止所有workers
-            newWorkers.forEach(w => w.terminate())
-            setWorkers([])
+            handleSuccess(privateKey, publicId)
           } else if (type === 'error') {
             console.error('Error generating address:', error)
             setIsGenerating(false)
@@ -315,6 +313,25 @@ export default function Home() {
       setGenerationSpeed(0)  // 当不在生成或已暂停时，速度为 0
     }
   }, [workerSpeeds, isGenerating, isPaused])
+
+  const handleSuccess = (privateKey: string, publicId: string) => {
+    setResult({
+      privateKey,
+      publicId,
+    })
+    setProgress(100)
+    setIsGenerating(false)
+    setIsPaused(false)
+    setGenerationSpeed(0)
+    setShowSuccessDialog(true)
+    
+    // 清理本地存储
+    localStorage.removeItem('generatedAddresses')
+    
+    // 终止所有workers
+    workers.forEach(w => w.terminate())
+    setWorkers([])
+  }
 
   const SuccessDialog = () => (
     <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
