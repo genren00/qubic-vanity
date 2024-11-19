@@ -1,13 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'production', // 改为生产模式
-  entry: {
-    qubic: './worker-bundle.js'
-  },
+  mode: 'production',
+  entry: './worker-bundle.js',
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'public/lib'),
+    filename: 'worker.js',
+    path: path.resolve(__dirname, 'public'),
   },
   resolve: {
     fallback: {
