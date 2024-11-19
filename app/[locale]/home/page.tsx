@@ -96,16 +96,8 @@ export default function Home() {
         });
       }
 
-      // 添加离线存储支持
-      const savedResults = localStorage.getItem('generatedAddresses');
-      if (savedResults) {
-        try {
-          const parsedResults = JSON.parse(savedResults);
-          setResult(parsedResults);
-        } catch (e) {
-          console.error('Error loading saved results:', e);
-        }
-      }
+      // 清理本地存储中的旧数据
+      localStorage.removeItem('generatedAddresses');
     }
   }, [])
 
