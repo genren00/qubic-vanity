@@ -67,8 +67,37 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setMaxWorkers(window.navigator?.hardwareConcurrency || 4)
+      
+      // 注册 Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/worker.js', {
+          scope: '/'
+        }).then(registration => {
+          console.log('Service Worker registered:', registration);
+        }).catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+      }
+
+      // 添加离线存储支持
+      const savedResults = localStorage.getItem('generatedAddresses');
+      if (savedResults) {
+        try {
+          const parsedResults = JSON.parse(savedResults);
+          setResult(parsedResults);
+        } catch (e) {
+          console.error('Error loading saved results:', e);
+        }
+      }
     }
   }, [])
+
+  // 保存生成结果到本地存储
+  useEffect(() => {
+    if (result) {
+      localStorage.setItem('generatedAddresses', JSON.stringify(result));
+    }
+  }, [result]);
 
   const incrementCPU = () => {
     if (cpuUsage < 100) {

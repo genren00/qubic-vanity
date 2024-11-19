@@ -129,3 +129,36 @@ self.onmessage = async (e) => {
     await startGenerating(pattern, isPrefix, startCount, workerId)
   }
 }
+
+// Service Worker 部分
+const CACHE_NAME = 'qubic-vanity-cache-v1';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/lib/qubic.bundle.js',
+  '/worker.js'
+];
+
+// Service Worker 安装事件
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(ASSETS_TO_CACHE);
+      })
+  );
+});
+
+// Service Worker 获取事件
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // 如果在缓存中找到响应，则返回缓存的版本
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+  );
+});
