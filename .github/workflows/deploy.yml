@@ -22,8 +22,14 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: Copy index.html redirect
+      - name: Copy root index.html
         run: cp index.html out/
+        
+      - name: Rename home.html to index.html in en folder
+        run: mv out/en/home.html out/en/index.html
+        
+      - name: Rename home.html to index.html in zh folder
+        run: mv out/zh/home.html out/zh/index.html
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
