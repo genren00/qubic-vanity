@@ -133,7 +133,7 @@ self.onmessage = async (e) => {
 // Service Worker 部分
 const CACHE_NAME = 'qubic-vanity-cache-v1';
 const ASSETS_TO_CACHE = [
-  './lib/qubic.bundle.js',
+  '/lib/qubic.bundle.js',
   '/worker.js'
 ];
 
