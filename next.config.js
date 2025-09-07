@@ -14,11 +14,19 @@ const nextConfig = {
     unoptimized: true,
   },
   
-  // Add trailing slash for consistent routing
-  trailingSlash: true,
-  
-  // Export configuration for proper static files
-  exportTrailingSlash: true,
+  // Ensure static assets are copied correctly
+  async rewrites() {
+    return [
+      {
+        source: '/worker.js',
+        destination: '/worker.js',
+      },
+      {
+        source: '/lib/:path*',
+        destination: '/lib/:path*',
+      },
+    ]
+  },
 };
 
 module.exports = withNextIntl(nextConfig);
