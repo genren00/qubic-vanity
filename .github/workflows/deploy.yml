@@ -22,14 +22,51 @@ jobs:
       - name: Build
         run: npm run build
         
+      - name: List all files in out directory
+        run: |
+          echo "=== Listing all files in out directory ==="
+          find out -type f
+          echo "=== Directory structure ==="
+          tree out || ls -la out/
+        
       - name: Copy root index.html
         run: cp index.html out/
         
-      - name: Rename home.html to index.html in en folder
-        run: mv out/en/home.html out/en/index.html
+      - name: Check for home.html files
+        run: |
+          echo "=== Checking for home.html files ==="
+          find out -name "home.html"
+          echo "=== Checking for index.html files ==="
+          find out -name "index.html"
         
-      - name: Rename home.html to index.html in zh folder
-        run: mv out/zh/home.html out/zh/index.html
+      - name: Create proper index files (if needed)
+        run: |
+          # If en.html exists in root, move it to en/index.html
+          if [ -f "out/en.html" ]; then
+            mkdir -p out/en
+            mv out/en.html out/en/index.html
+          fi
+          
+          # If zh.html exists in root, move it to zh/index.html  
+          if [ -f "out/zh.html" ]; then
+            mkdir -p out/zh
+            mv out/zh.html out/zh/index.html
+          fi
+          
+          # If home.html exists in en folder, rename to index.html
+          if [ -f "out/en/home.html" ]; then
+            mv out/en/home.html out/en/index.html
+          fi
+          
+          # If home.html exists in zh folder, rename to index.html
+          if [ -f "out/zh/home.html" ]; then
+            mv out/zh/home.html out/zh/index.html
+          fi
+        
+      - name: Final file listing
+        run: |
+          echo "=== Final file structure ==="
+          find out -type f | sort
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
