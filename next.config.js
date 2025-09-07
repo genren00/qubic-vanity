@@ -1,13 +1,15 @@
-const createNextIntlPlugin = require('next-intl/plugin');
-
-const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
-
 /** @type {import('next').NextConfig} */
-const config = {
+const nextConfig = {
+  // Enable static export for GitHub Pages
+  output: 'export',
+  
+  // Set base path to your repository name
+  basePath: '/qubic-vanity',
+  
+  // Disable image optimization for static export
   images: {
     unoptimized: true,
-    domains: ['vercel.app', 'localhost'],
-  }
+  },
 };
 
-module.exports = withNextIntl(config);
+module.exports = nextConfig;
