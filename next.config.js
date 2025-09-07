@@ -16,6 +16,9 @@ const nextConfig = {
   
   // Add trailing slash for consistent routing
   trailingSlash: true,
+  
+  // Export configuration for proper static files
+  exportTrailingSlash: true,
 };
 
 module.exports = withNextIntl(nextConfig);
