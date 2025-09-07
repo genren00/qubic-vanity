@@ -1,92 +1,92 @@
-name: Deploy to GitHub Pages
+const startWorkers = (startCount = 0) => {
+  // Clear old workers
+  workers.forEach(worker => worker.terminate())
+  setWorkers([])
+  setWorkerCounts({})
+  setWorkerSpeeds({})
+  
+  // Reset state
+  setProgress(0)
+  resetGeneration(startCount)
+  setResult(null)
 
-on:
-  push:
-    branches: [ main ]
+  try {
+    const newWorkers: Worker[] = []
+    
+    // Use CPU workers
+    const targetWorkers = Math.max(1, Math.floor((maxWorkers * cpuUsage) / 100))
+    const countPerWorker = Math.floor(startCount / targetWorkers)
+    
+    for (let i = 0; i < targetWorkers; i++) {
+      // Fix the worker path - it should be relative to the current page
+      const workerPath = './worker.js'  // Use relative path
+      
+      console.log('Creating worker at path:', workerPath)
+      
+      const worker = new Worker(workerPath)
+      
+      worker.onerror = (error) => {
+        console.error('Worker error:', error)
+      }
+      
+      worker.onmessage = (e) => {
+        const { type, privateKey, publicId, error, count, speed, workerId } = e.data
+        console.log('Worker message:', { type, count, speed, workerId })
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+        if (type === 'progress') {
+          setWorkerCounts(prev => ({
+            ...prev,
+            [workerId]: count
+          }))
+          setWorkerSpeeds(prev => ({
+            ...prev,
+            [workerId]: speed
+          }))
+        } else if (type === 'count') {
+          setWorkerCounts(prev => ({
+            ...prev,
+            [workerId]: count
+          }))
+        } else if (type === 'success') {
+          handleSuccess(privateKey, publicId)
+        } else if (type === 'error') {
+          console.error('Error generating address:', error)
+          setIsGenerating(false)
+          setIsPaused(false)
+          setGenerationSpeed(0)
           
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Build
-        run: npm run build
-        
-      - name: Create root index.html
-        run: |
-          echo '<!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <title>Qubic Vanity Address Generator</title>
-              <meta http-equiv="refresh" content="0; url='./en/'">
-              <script>window.location.href = "./en/";</script>
-            </head>
-            <body>
-              <h1>Redirecting to <a href="./en/">Qubic Vanity Address Generator</a>...</h1>
-            </body>
-          </html>' > out/index.html
-        
-      - name: Fix language directories
-        run: |
-          # Rename home.html to index.html in en directory
-          if [ -f "out/en/home.html" ]; then
-            mv out/en/home.html out/en/index.html
-          fi
+          newWorkers.forEach(w => w.terminate())
+          setWorkers([])
           
-          # Rename home.html to index.html in zh directory  
-          if [ -f "out/zh/home.html" ]; then
-            mv out/zh/home.html out/zh/index.html
-          fi
-          
-          # Handle root language files if they exist
-          if [ -f "out/en.html" ]; then
-            mkdir -p out/en
-            mv out/en.html out/en/index.html
-          fi
-          
-          if [ -f "out/zh.html" ]; then
-            mkdir -p out/zh
-            mv out/zh.html out/zh/index.html
-          fi
-        
-      - name: List final file structure
-        run: |
-          echo "=== Final file structure ==="
-          find out -name "*.html" | sort
-          echo "=== Checking index files ==="
-          ls -la out/ 2>/dev/null || echo "Root directory empty"
-          ls -la out/en/ 2>/dev/null || echo "en directory empty"
-          ls -la out/zh/ 2>/dev/null || echo "zh directory empty"
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
+          toast({
+            title: t('toast.error'),
+            description: t('toast.errorGenerating', { error }),
+            variant: "destructive"
+          })
+        }
+      }
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      worker.postMessage({
+        type: 'start',
+        pattern,
+        isPrefix: patternType === 'prefix',
+        startCount: countPerWorker,
+        workerId: i
+      })
+
+      newWorkers.push(worker)
+    }
+
+    setWorkers(newWorkers)
+  } catch (error) {
+    console.error('Error starting workers:', error)
+    setIsGenerating(false)
+    setIsPaused(false)
+    setGenerationSpeed(0)
+    toast({
+      title: t('toast.error'),
+      description: t('toast.errorStarting'),
+      variant: "destructive"
+    })
+  }
+}
