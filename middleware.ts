@@ -5,10 +5,7 @@ export default createMiddleware({
   locales: ['en', 'zh'],
   
   // Used when no locale matches
-  defaultLocale: 'en',
-  
-  // Add basePath to redirect
-  basePath: '/qubic-vanity'
+  defaultLocale: 'en'
 });
 
 export const config = {
