@@ -1,15 +1,17 @@
 import createMiddleware from 'next-intl/middleware';
- 
+
 export default createMiddleware({
   // A list of all locales that are supported
   locales: ['en', 'zh'],
- 
-  // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
+  
+  // Used when no locale matches
   defaultLocale: 'en',
-  localePrefix: 'always'
+  
+  // Add basePath to redirect
+  basePath: '/qubic-vanity'
 });
- 
+
 export const config = {
-  // Skip all paths that should not be internationalized
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
+  // Match only internationalized pathnames
+  matcher: ['/', '/(zh|en)/:path*']
 };
