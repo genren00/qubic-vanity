@@ -1,5 +1,5 @@
 // 导入打包后的 Qubic 库
-importScripts('/lib/qubic.bundle.js')
+importScripts('./lib/qubic.bundle.js')
 
 console.log('Qubic library:', self.qubic)
 console.log('QubicHelper:', self.QubicHelper)
