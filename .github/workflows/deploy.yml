@@ -22,6 +22,9 @@ jobs:
       - name: Build
         run: npm run build
         
+      - name: Copy index.html redirect
+        run: cp index.html out/
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
