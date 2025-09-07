@@ -14,19 +14,18 @@ const nextConfig = {
     unoptimized: true,
   },
   
-  // Ensure static assets are copied correctly
+  // Ensure worker files are copied
   async rewrites() {
     return [
       {
         source: '/worker.js',
         destination: '/worker.js',
       },
-      {
-        source: '/lib/:path*',
-        destination: '/lib/:path*',
-      },
     ]
   },
+  
+  // Handle static assets
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/qubic-vanity' : '',
 };
 
 module.exports = withNextIntl(nextConfig);
